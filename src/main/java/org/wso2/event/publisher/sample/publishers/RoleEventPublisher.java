@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.identity.event.event.Event;
 import org.wso2.carbon.identity.role.v2.mgt.core.model.Permission;
+import org.wso2.event.publisher.sample.util.CommonUtil;
 import org.wso2.event.publisher.sample.util.PublisherUtil;
 import org.wso2.event.publisher.sample.models.RoleEventData;
 import org.wso2.event.publisher.sample.models.RoleUpdateEventData;
@@ -80,6 +81,7 @@ public class RoleEventPublisher extends BaseEventPublisher {
 
     private void handleRoleEvent(Event event) {
         RoleEventData roleEventData = RoleEventData.builder(event.getEventProperties(), event.getEventName());
+        CommonUtil.validateActiveTenant(roleEventData.getTenantDomain());
         Object[] payloadData = createRoleEventPayload(roleEventData);
         String streamName = selectStreamName(roleEventData.getTenantDomain(),
                 ROLE_STREAM_NAME, ORG_ROLE_STREAM_NAME);
@@ -89,12 +91,12 @@ public class RoleEventPublisher extends BaseEventPublisher {
     private void handleRoleUpdateEvent(Event event) {
         RoleUpdateEventData roleUpdateEventData =
                 RoleUpdateEventData.builder(event.getEventProperties(), event.getEventName());
+        CommonUtil.validateActiveTenant(roleUpdateEventData.getTenantDomain());
         Object[] payloadData = createRoleUpdateEventPayload(roleUpdateEventData);
         String streamName = selectStreamName(roleUpdateEventData.getTenantDomain(),
                 ROLE_UPDATE_STREAM_NAME, ORG_ROLE_UPDATE_STREAM_NAME);
         PublisherUtil.publishToAnalytics(payloadData, roleUpdateEventData.getTenantDomain(), streamName);
     }
-
 
     private static Object[] createRoleEventPayload(RoleEventData roleEventData) {
         Object[] payloadData = new Object[10];

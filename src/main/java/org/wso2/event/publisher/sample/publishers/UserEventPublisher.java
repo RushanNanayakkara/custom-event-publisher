@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.identity.event.event.Event;
+import org.wso2.event.publisher.sample.util.CommonUtil;
 import org.wso2.event.publisher.sample.util.PublisherUtil;
 import org.wso2.event.publisher.sample.models.UserEventData;
 
@@ -30,6 +31,7 @@ import java.util.Set;
 
 import static org.wso2.carbon.identity.event.IdentityEventConstants.Event.*;
 import static org.wso2.event.publisher.sample.constants.EventPublisherConstants.*;
+import static org.wso2.event.publisher.sample.util.CommonUtil.mapToKeyValuePairs;
 import static org.wso2.event.publisher.sample.util.CommonUtil.selectStreamName;
 
 /**
@@ -57,6 +59,7 @@ public class UserEventPublisher extends BaseEventPublisher {
     public void handleEvent(Event event) throws IdentityEventException {
         if (USER_EVENTS.contains(event.getEventName())) {
             UserEventData userEventData = UserEventData.builder(event);
+            CommonUtil.validateActiveTenant(userEventData.getTenantDomain());
             Object[] payloadData = createUserEventPayload(userEventData);
             String streamName = selectStreamName(userEventData.getTenantDomain(),
                     USER_STREAM_NAME, ORG_USER_STREAM_NAME);
@@ -76,17 +79,9 @@ public class UserEventPublisher extends BaseEventPublisher {
         payloadData[3] = userEventData.getUsername();
         payloadData[4] = userEventData.getUserStoreDomain();
         payloadData[5] = userEventData.getTenantDomain();
-
-        // Convert maps to string representations
-        if (userEventData.getClaimsAdded() != null && !userEventData.getClaimsAdded().isEmpty()) {
-            payloadData[6] = userEventData.getClaimsAdded().toString();
-        }
-        if (userEventData.getClaimsRemoved() != null && !userEventData.getClaimsRemoved().isEmpty()) {
-            payloadData[7] = userEventData.getClaimsRemoved().toString();
-        }
-        if (userEventData.getClaimsUpdated() != null && !userEventData.getClaimsUpdated().isEmpty()) {
-            payloadData[8] = userEventData.getClaimsUpdated().toString();
-        }
+        payloadData[6] = mapToKeyValuePairs(userEventData.getClaimsAdded());
+        payloadData[7] = mapToKeyValuePairs(userEventData.getClaimsRemoved());
+        payloadData[8] = mapToKeyValuePairs(userEventData.getClaimsUpdated());
 
         return payloadData;
     }

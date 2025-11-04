@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.identity.event.event.Event;
+import org.wso2.event.publisher.sample.util.CommonUtil;
 import org.wso2.event.publisher.sample.util.PublisherUtil;
 import org.wso2.event.publisher.sample.models.GroupEventData;
 import org.wso2.event.publisher.sample.models.GroupUpdateEventData;
@@ -79,6 +80,7 @@ public class GroupEventPublisher extends BaseEventPublisher {
     private void handleGroupCreateDeleteEvent(Event event) {
 
         GroupEventData groupEventData = GroupEventData.builder(event.getEventProperties(), event.getEventName());
+        CommonUtil.validateActiveTenant(groupEventData.getTenantDomain());
         Object[] payloadData = createGroupEventPayload(groupEventData);
         String streamName = selectStreamName(groupEventData.getTenantDomain(),
                 GROUP_STREAM_NAME, ORG_GROUP_STREAM_NAME);
@@ -89,6 +91,7 @@ public class GroupEventPublisher extends BaseEventPublisher {
 
         GroupUpdateEventData groupUpdateEventData = GroupUpdateEventData.builder(
                 event.getEventProperties(), event.getEventName());
+        CommonUtil.validateActiveTenant(groupUpdateEventData.getTenantDomain());
         Object[] payloadData = createUpdateGroupEventPayload(groupUpdateEventData);
         String streamName = selectStreamName(groupUpdateEventData.getTenantDomain(),
                 GROUP_UPDATE_STREAM_NAME, ORG_GROUP_UPDATE_STREAM_NAME);

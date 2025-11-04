@@ -22,9 +22,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.bean.context.MessageContext;
+import org.wso2.carbon.identity.event.bean.IdentityEventMessageContext;
+import org.wso2.carbon.identity.event.event.Event;
 import org.wso2.carbon.identity.event.handler.AbstractEventHandler;
 import org.wso2.event.publisher.sample.util.PublisherUtil;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**

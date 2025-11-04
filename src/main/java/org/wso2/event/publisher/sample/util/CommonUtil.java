@@ -18,6 +18,11 @@
 
 package org.wso2.event.publisher.sample.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
+import org.wso2.event.publisher.sample.internal.CustomEventPublisherDataHolder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,8 +34,34 @@ import static org.wso2.event.publisher.sample.constants.EventPublisherConstants.
  */
 public class CommonUtil {
 
+    private static final Log LOG = LogFactory.getLog(CommonUtil.class);
+
     private CommonUtil() {
         // Private constructor to prevent instantiation
+    }
+
+    /**
+     * Validate if the tenant is active before publishing events.
+     *
+     * @param tenantDomain Tenant domain to check
+     */
+    public static void validateActiveTenant(String tenantDomain) {
+
+        boolean isTenantActive;
+        try {
+            isTenantActive = CustomEventPublisherDataHolder.getInstance().getRealmService().getTenantManager().
+                    isTenantActive(IdentityTenantUtil.getTenantId(tenantDomain));
+        } catch (Exception e) {
+            LOG.debug("Error while checking whether the tenant is active or not: " + tenantDomain, e);
+            return;
+        }
+
+        if (!isTenantActive) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipping event publishing for inactive tenant: " + tenantDomain);
+            }
+            return;
+        }
     }
 
     /**
@@ -79,6 +110,49 @@ public class CommonUtil {
      */
     public static String selectStreamName(String tenantDomain, String defaultStream, String orgStream) {
         return isOrganizationTenant(tenantDomain) ? orgStream : defaultStream;
+    }
+
+    /**
+     * Convert map to JSON string for event payload.
+     * Returns null for null or empty maps.
+     *
+     * @param map Map to convert
+     * @return JSON string representation of the map, or null if map is empty
+     */
+    public static Object mapToKeyValuePairs(java.util.Map<String, String> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder json = new StringBuilder("{");
+        int index = 0;
+        for (java.util.Map.Entry<String, String> entry : map.entrySet()) {
+            if (index > 0) {
+                json.append(",");
+            }
+            json.append("\"").append(escapeJson(entry.getKey())).append("\":");
+            json.append("\"").append(escapeJson(entry.getValue())).append("\"");
+            index++;
+        }
+        json.append("}");
+        return json.toString();
+    }
+
+    /**
+     * Escape special characters in JSON strings.
+     *
+     * @param value String to escape
+     * @return Escaped string safe for JSON
+     */
+    private static String escapeJson(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("\\", "\\\\")
+                    .replace("\"", "\\\"")
+                    .replace("\n", "\\n")
+                    .replace("\r", "\\r")
+                    .replace("\t", "\\t");
     }
 }
 

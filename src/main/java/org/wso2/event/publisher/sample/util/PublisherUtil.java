@@ -45,6 +45,7 @@ public class PublisherUtil {
      * @param streamName       Stream name
      */
     public static void publishToAnalytics(Object[] payloadData, String publishingDomain, String streamName) {
+
         try {
             FrameworkUtils.startTenantFlow(publishingDomain);
             Object[] metadataArray = AuthnDataPublisherUtils.getMetaDataArray(publishingDomain);
@@ -54,7 +55,8 @@ public class PublisherUtil {
             CustomEventPublisherDataHolder.getInstance().getPublisherService().publish(event);
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Published event to stream '%s' for domain '%s'", streamName, publishingDomain));
+                LOG.debug(
+                        String.format("Published event to stream '%s' for domain '%s'", streamName, publishingDomain));
             }
         } finally {
             FrameworkUtils.endTenantFlow();
@@ -69,6 +71,7 @@ public class PublisherUtil {
      * @return true if enabled, false otherwise
      */
     public static boolean isPublisherEnabled(String eventPublisherName, Properties moduleProperties) {
+
         if (moduleProperties != null) {
             String handlerEnabled = moduleProperties.getProperty(eventPublisherName + ".enable");
             return Boolean.parseBoolean(handlerEnabled);

@@ -19,11 +19,13 @@
 package org.wso2.event.publisher.sample.internal;
 
 import org.wso2.carbon.event.stream.core.EventStreamService;
+import org.wso2.carbon.user.core.service.RealmService;
 
 public class CustomEventPublisherDataHolder {
 
     private static final CustomEventPublisherDataHolder serviceHolder = new CustomEventPublisherDataHolder();
     private EventStreamService publisherService;
+    private RealmService realmService;
 
     private CustomEventPublisherDataHolder() {
 
@@ -42,5 +44,15 @@ public class CustomEventPublisherDataHolder {
     public void setPublisherService(EventStreamService publisherService) {
 
         this.publisherService = publisherService;
+    }
+
+    public void setRealmService(RealmService realmService) {
+
+        this.realmService = realmService;
+    }
+
+    public RealmService getRealmService() {
+
+        return realmService;
     }
 }

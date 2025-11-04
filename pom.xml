@@ -115,6 +115,11 @@
             <artifactId>org.wso2.carbon.identity.role.v2.mgt.core</artifactId>
             <version>${identity.framework.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -168,6 +173,7 @@
     </build>
     <properties>
         <identity.framework.version>7.8.417</identity.framework.version>
+        <carbon.kernel.version>4.10.99</carbon.kernel.version>
         <carbon.identity.framework.version>7.8.417</carbon.identity.framework.version>
         <carbon.identity.framework.imp.pkg.version.range>[5.20.90, 8.0.0)
         </carbon.identity.framework.imp.pkg.version.range>

@@ -28,6 +28,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.event.stream.core.EventStreamService;
 import org.wso2.carbon.identity.event.handler.AbstractEventHandler;
+import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.event.publisher.sample.publishers.GroupEventPublisher;
 import org.wso2.event.publisher.sample.publishers.RoleEventPublisher;
 import org.wso2.event.publisher.sample.publishers.UserEventPublisher;
@@ -78,5 +79,24 @@ public class CustomEventPublisherServiceComponent {
     protected void unsetEventStreamService(EventStreamService publisherService) {
 
         CustomEventPublisherDataHolder.getInstance().setPublisherService(null);
+    }
+
+    @Reference(
+            name = "user.realmservice.default",
+            service = RealmService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetRealmService"
+    )
+    protected void setRealmService(RealmService realmService) {
+
+        log.debug("Setting the Realm Service.");
+        CustomEventPublisherDataHolder.getInstance().setRealmService(realmService);
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+
+        log.debug("Unsetting the Realm Service.");
+        CustomEventPublisherDataHolder.getInstance().setRealmService(null);
     }
 }
