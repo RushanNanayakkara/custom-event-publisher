@@ -25,20 +25,20 @@
       "type": "STRING"
     },
     {
-      "name": "orgName",
+      "name": "tenantDomain",
       "type": "STRING"
     },
     {
       "name": "claimsAdded",
-      "type": "STRING"
+      "type": "OBJECT"
     },
     {
       "name": "claimsRemoved",
-      "type": "STRING"
+      "type": "OBJECT"
     },
     {
       "name": "claimsUpdated",
-      "type": "STRING"
+      "type": "OBJECT"
     },
     {
       "name": "timestamp",

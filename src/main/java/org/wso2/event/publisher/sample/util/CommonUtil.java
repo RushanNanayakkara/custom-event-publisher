@@ -21,6 +21,7 @@ package org.wso2.event.publisher.sample.util;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.event.publisher.sample.internal.CustomEventPublisherDataHolder;
 
@@ -130,19 +131,10 @@ public class CommonUtil {
             return null;
         }
 
-        StringBuilder json = new StringBuilder("{");
-        int index = 0;
-        for (java.util.Map.Entry<String, String> entry : map.entrySet()) {
-            if (index > 0) {
-                json.append(",");
-            }
-            json.append("\"").append(escapeJson(entry.getKey())).append("\":");
-            json.append("\"").append(escapeJson(entry.getValue())).append("\"");
-            index++;
-        }
-        json.append("}");
-        return json.toString();
+        return new JSONObject(map);
     }
+
+
 
     /**
      * Escape special characters in JSON strings.
