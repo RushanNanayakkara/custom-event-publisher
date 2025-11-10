@@ -20,6 +20,7 @@ package org.wso2.event.publisher.sample.models;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.identity.event.event.Event;
 
 public class UserEventData {
@@ -49,11 +50,29 @@ public class UserEventData {
     public static UserEventData builder(Event event) {
 
         Map<String, Object> eventProperties = event.getEventProperties();
+        String userId = (String) eventProperties.get("USER_ID");
+        String username = (String) eventProperties.get("user-name");
+        Object claims = event.getEventProperties().get("USER_CLAIMS");
+
+        if (claims instanceof Map) {
+            Object userIdObj = ((Map)claims).get("http://wso2.org/claims/userid");
+            if (StringUtils.isBlank(userId) && userIdObj != null) {
+                userId = String.valueOf(userIdObj);
+            }
+            Object usernameObj = ((Map)claims).get("http://wso2.org/claims/username");
+            if (StringUtils.isBlank(username) && usernameObj != null) {
+                username = String.valueOf(usernameObj);
+            }
+        }
+
+        if (event.getEventName().equals("POST_ADD_USER")) {
+            eventProperties.put("USER_CLAIMS_ADDED", claims);
+        }
 
         return new UserEventData(
                 event.getEventName(),
-                (String) eventProperties.get("USER_ID"),
-                (String) eventProperties.get("user-name"),
+                userId,
+                username,
                 (String) eventProperties.get("userstore-domain"),
                 (String) eventProperties.get("tenant-domain"),
                 (Map<String, String>) eventProperties.get("USER_CLAIMS_ADDED"),
