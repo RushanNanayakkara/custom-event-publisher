@@ -35,6 +35,7 @@ This includes the following stream definitions:
 - `org.wso2.is.analytics.stream.GroupUpdateEventData_1.0.0.json`
 - `org.wso2.is.analytics.stream.OrgDeleteEventData_1.0.0.json`
 - `org.wso2.is.analytics.stream.OrgEventData_1.0.0.json`
+- `org.wso2.is.analytics.stream.OrgGroupEventData_1.0.0.json`
 - `org.wso2.is.analytics.stream.OrgGroupUpdateEventData_1.0.0.json`
 - `org.wso2.is.analytics.stream.OrgPatchEventData_1.0.0.json`
 - `org.wso2.is.analytics.stream.OrgRoleEventData_1.0.0.json`
@@ -57,6 +58,7 @@ This includes the following publisher configurations:
 - `IsAnalytics-Publisher-http-GroupUpdateEventData.xml`
 - `IsAnalytics-Publisher-http-OrgDeleteEventData.xml`
 - `IsAnalytics-Publisher-http-OrgEventData.xml`
+- `IsAnalytics-Publisher-http-OrgGroupEventData.xml`
 - `IsAnalytics-Publisher-http-OrgGroupUpdateEventData.xml`
 - `IsAnalytics-Publisher-http-OrgPatchEventData.xml`
 - `IsAnalytics-Publisher-http-OrgRoleEventData.xml`
